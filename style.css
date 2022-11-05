@@ -1,0 +1,57 @@
+:root {
+    --main-color: #2b2d42;
+    --secondary-color: #8d99ae;
+    --background-color: #edf2f4;
+    --danger-color: #ef233be3;
+
+    --gap: 1rem;
+
+    --padding: 1rem;
+    --btn-padding: 0.6rem;
+    --margin: 1.2rem;
+
+    --font-lg: 1.2rem;
+    --font-xlg: 1.8rem;
+    --font-sl: 0.75rem;
+    --font-md: 0.9rem;
+}
+
+/* Main Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Barlow', sans-serif;
+}
+
+html {
+    font-size: 15px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: var(--background-color);
+    color: var(--main-color);
+}
+
+p {
+    font-size: var(--font-md);
+}
+
+h1 {
+    font-size: var(--font-xlg);
+}
+
+a {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+button {
+    cursor: pointer;
+    font-size: var(--font-md);
+}
+
+i {
+    font-size: var(--font-lg);
+}

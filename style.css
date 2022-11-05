@@ -13,7 +13,7 @@
     --margin: 1.2rem;
 
     --font-lg: 1.4rem;
-    --font-xlg: 1.8rem;
+    --font-xlg: 4rem;
     --font-sl: 0.8rem;
     --font-md: 1.1rem;
 }
@@ -70,4 +70,5 @@ i {
 
 header {
     padding: var(--padding);
+    text-align: center;
 }

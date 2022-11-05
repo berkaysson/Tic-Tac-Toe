@@ -1,37 +1,43 @@
 :root {
-    --main-color: #2b2d42;
-    --secondary-color: #8d99ae;
+    --main-color: #2b2d42;               /*font color*/
+    --secondary-color: #8d99ae;          /*hover effect or weak font color*/
     --background-color: #edf2f4;
     --danger-color: #ef233be3;
 
     --gap: 1rem;
 
     --padding: 1rem;
+    --paddding-sl: 0.4rem;
+    --padding-lg:3rem;
     --btn-padding: 0.6rem;
     --margin: 1.2rem;
 
-    --font-lg: 1.2rem;
+    --font-lg: 1.4rem;
     --font-xlg: 1.8rem;
-    --font-sl: 0.75rem;
-    --font-md: 0.9rem;
+    --font-sl: 0.8rem;
+    --font-md: 1.1rem;
 }
 
 /* Main Styles */
 
-* {
+*,
+*::after,
+*::before {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Barlow', sans-serif;
 }
 
 html {
-    font-size: 15px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
+    min-height: 100%;
+}
+
+body {
     background-color: var(--background-color);
     color: var(--main-color);
+    font-size: 16px;
+    font-family: 'Indie Flower', "cursive";
+    line-height: 1.6;
 }
 
 p {
@@ -48,10 +54,20 @@ a {
 }
 
 button {
+    all: unset;
     cursor: pointer;
     font-size: var(--font-md);
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 i {
     font-size: var(--font-lg);
+}
+
+/* HEADER */
+
+header {
+    padding: var(--padding);
 }

@@ -31,14 +31,13 @@
 
 html {
     min-height: 100%;
+    font-size: 16px;
 }
 
 body {
     background-color: var(--background-color);
     color: var(--main-color);
-    font-size: 16px;
     font-family: 'Indie Flower', "cursive";
-    line-height: 1.6;
 }
 
 p {
@@ -133,7 +132,7 @@ main {
 /* MODAL */
 
 .modal {
-    display: none;
+    display: flex;
     position: fixed;
     left: 0;
     top: 0;
@@ -152,7 +151,7 @@ main {
     align-items: center;
     gap: 4rem;
     padding: var(--padding-lg);
-    max-height: 450px;
+    max-height: 420px;
     margin: 15% auto;
     border-radius: var(--border-radius);    
     background-color: var(--background-color);
@@ -198,4 +197,54 @@ main {
 .select {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 660px) {
+    html {
+        font-size: 15px;
+    }
+
+    #settings {
+        gap: 2rem;
+        max-height: 350px;
+        padding: var(--padding);
+    }
+
+    #gameboard {
+        width: 400px;
+        height: 400px;
+    }
+    .field {
+        width: 120px;
+        height: 120px;
+        font-size: 70px;
+    }
+}
+
+@media (max-width: 430px) {
+    html {
+        font-size: 15px;
+    }
+
+    #settings {
+        gap: 2rem;
+        max-height: 300px;
+        width: 100%;
+    }
+
+    #gameboard {
+        width: 320px;
+        height: 320px;
+    }
+    .field {
+        width: 100px;
+        height: 100px;
+        font-size: 65px;
+    }
+
+    .btn, .select {
+        font-size: var(--font-md);
+    }
 }

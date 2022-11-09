@@ -19,6 +19,21 @@
     <header class="header">
         <h1 class="title">Tic-Tac-Toe</h1>
     </header>
+
+    <div class="modal">
+        <form action="" id="settings">
+            <select name="player1" id="player1">
+                <option value="Player">Player</option>
+                <option value="AI (Easy)"> AI (Easy)</option>
+            </select>
+            <select name="player2" id="player2">
+                <option value="Player">Player</option>
+                <option value="AI (Easy)"> AI (Easy)</option>
+            </select>
+            <button class="btn" type="submit">Start</button>
+        </form>
+    </div>  
+
     <main>
         <div id="message-box">Player X's turn</div>
         <div id="gameboard">
@@ -33,9 +48,9 @@
             <div class="field" data-index="8"></div>
         </div>
         <div class="btn-wrapper">
+            <button class="btn" id="settings-btn">Settings</button>
             <button class="btn" id="restart-btn">Restart</button>
         </div>
-        
     </main>
     
     <script src="script.js"></script>

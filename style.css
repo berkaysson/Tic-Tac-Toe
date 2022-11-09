@@ -77,6 +77,7 @@ select {
 /* HEADER */
 
 header {
+    width: 100%;
     padding: var(--padding);
     text-align: center;
 }
@@ -84,12 +85,15 @@ header {
 /* MAIN */
 
 main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: var(--padding);
 }
 
 #message-box {
     font-size: var(--font-lg);
-    text-align: center;
     padding-bottom: var(--padding);
 }
 
@@ -100,7 +104,6 @@ main {
     grid-template-columns: repeat(3,1fr);
     width: 600px;
     height: 600px;
-    margin: 0 auto;
     gap: var(--gap);
 }
 
@@ -130,7 +133,7 @@ main {
 /* MODAL */
 
 .modal {
-    display: flex;
+    display: none;
     position: fixed;
     left: 0;
     top: 0;

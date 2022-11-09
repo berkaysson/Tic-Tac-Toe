@@ -22,14 +22,21 @@
 
     <div class="modal">
         <form action="" id="settings">
-            <select name="player1" id="player1" class="select">
+            <div class="player-wrapper">
+                <div class="sign">X</div>
+                <select name="player1" id="player1" class="select">
+                    <option value="Player">Player</option>
+                    <option value="AI (Easy)"> AI (Easy)</option>
+                </select>
+            </div>
+            <div class="player-wrapper">  
+                <div class="sign">O</div>
+                <select name="player2" id="player2" class="select">
                 <option value="Player">Player</option>
                 <option value="AI (Easy)"> AI (Easy)</option>
-            </select>
-            <select name="player2" id="player2" class="select">
-                <option value="Player">Player</option>
-                <option value="AI (Easy)"> AI (Easy)</option>
-            </select>
+                </select>
+            </div>
+            
             <button class="btn" type="submit">Start</button>
         </form>
     </div>  

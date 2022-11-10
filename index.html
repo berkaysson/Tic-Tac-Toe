@@ -20,7 +20,7 @@
         <h1 class="title">Tic-Tac-Toe</h1>
     </header>
 
-    <div class="modal">
+    <div class="modal" id="modalForm">
         <form action="" id="settings">
             <div class="player-wrapper">
                 <div class="sign">X</div>
@@ -36,8 +36,11 @@
                 <option value="AI (Easy)"> AI (Easy)</option>
                 </select>
             </div>
-            
-            <button class="btn" type="submit">Start</button>
+
+            <div class="btn-wrapper">
+                <button class="btn" type="button">Start</button>
+                <button class="btn red-btn" id="close-btn" type="button">Close</button>
+            </div>
         </form>
     </div>  
 

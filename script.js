@@ -34,6 +34,8 @@ const displayController = (() => {
     const fieldElements = document.querySelectorAll(".field");
     const messageElement = document.getElementById("message-box");
     const restartButton = document.getElementById("restart-btn");
+    const settingsButton = document.getElementById("settings-btn");
+    const closeButton = document.getElementById("close-btn");
 
     fieldElements.forEach((field) => {
         field.addEventListener("click", (e) => {
@@ -48,6 +50,14 @@ const displayController = (() => {
         gameController.reset();
         updateGameboard();
         setMessageElement("Player X's turn");
+    });
+
+    settingsButton.addEventListener("click", () => {
+        document.getElementById("modalForm").style.display = "flex";
+    });
+
+    closeButton.addEventListener("click", () => {
+        document.getElementById("modalForm").style.display = "none";
     });
 
     const updateGameboard = () => {

@@ -158,8 +158,13 @@ main {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 2px 1px, rgba(0, 0, 0, 0.3) 0px 1px 3px 1px;
 }
 
-#settings>button {
+#settings>.btn-wrapper {
+    text-align: center;
     grid-column: 1/3;
+}
+
+#settings>.btn-wrapper>.btn:first-child{
+    width: 30%;
 }
 
 .sign {
@@ -197,6 +202,11 @@ main {
 .select {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
+}
+
+.red-btn {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
 }
 
 /* RESPONSIVE */

@@ -1,9 +1,9 @@
-const Player = (sign) => {
+const Player = (sign, player_type) => {
     function getSign() {
         return sign;
     }
-  
-    return {sign, getSign };
+
+    return {sign, player_type, getSign};
 };
 
 const gameBoard = (() => {
@@ -36,7 +36,15 @@ const displayController = (() => {
     const restartButton = document.getElementById("restart-btn");
     const settingsButton = document.getElementById("settings-btn");
     const closeButton = document.getElementById("close-btn");
+    const startButton = document.getElementById("start-btn");
+    const selectForms = document.querySelectorAll(".select");
 
+    selectForms.forEach((select) => {
+        select.addEventListener("change", () => {
+            gameController.createPlayers();
+        });
+    });
+    
     fieldElements.forEach((field) => {
         field.addEventListener("click", (e) => {
             if (gameController.getIsOver() || e.target.textContent !== "") return;
@@ -50,14 +58,25 @@ const displayController = (() => {
         gameController.reset();
         updateGameboard();
         setMessageElement("Player X's turn");
+        openModalForm();
+    });
+    
+    startButton.addEventListener("click", () => {
+        gameBoard.reset();
+        gameController.reset();
+        updateGameboard();
+        setMessageElement("Player X's turn");
+        closeModalForm();
+        gameController.createPlayers();
     });
 
     settingsButton.addEventListener("click", () => {
-        document.getElementById("modalForm").style.display = "flex";
+        openModalForm();
     });
 
     closeButton.addEventListener("click", () => {
-        document.getElementById("modalForm").style.display = "none";
+        closeModalForm();
+        gameController.createPlayers();
     });
 
     const updateGameboard = () => {
@@ -79,6 +98,14 @@ const displayController = (() => {
         messageElement.textContent = message; 
     }
 
+    const openModalForm = () => {
+        document.getElementById("modalForm").style.display = "flex";
+    }
+
+    const closeModalForm = () => {
+        document.getElementById("modalForm").style.display = "none";
+    }
+
     return {
         setResultMessage,
         setMessageElement
@@ -86,10 +113,17 @@ const displayController = (() => {
 })();
 
 const gameController = (() => {
-    const playerX = Player("X");
-    const playerO = Player("O");
+    let playerX;
+    let playerO;
     let round = 1;
     let isOver = false;
+    const selectForms = document.querySelectorAll(".select");
+
+    const createPlayers = () => {
+        playerX = Player("X", selectForms[0].value);
+        playerO = Player("O", selectForms[1].value);
+        return playerX, playerO;
+    }
 
     const playRound = (fieldIndex) => {
         gameBoard.setField(fieldIndex, getCurrentPlayerSign());
@@ -99,7 +133,8 @@ const gameController = (() => {
             isOver = true;
             return;
         }
-          if (round === 9) {
+
+        if (round === 9) {
             displayController.setResultMessage("Draw");
             isOver = true;
             return;
@@ -135,7 +170,7 @@ const gameController = (() => {
           )
         );
     }
-    
+
     const getIsOver = () => {
         return isOver;
     }; 
@@ -146,6 +181,6 @@ const gameController = (() => {
     };
 
     return {
-        getIsOver, playRound, reset
+        getIsOver, playRound, reset, createPlayers
     }
 })();

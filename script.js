@@ -3,8 +3,14 @@ const Player = (sign, player_type) => {
         return sign;
     }
 
-    return {sign, player_type, getSign};
+    function getType() {
+        return player_type;
+    }
+
+    return {sign, player_type, getSign, getType};
 };
+
+displayController.gameFlow();
 
 const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
@@ -44,14 +50,6 @@ const displayController = (() => {
             gameController.createPlayers();
         });
     });
-    
-    fieldElements.forEach((field) => {
-        field.addEventListener("click", (e) => {
-            if (gameController.getIsOver() || e.target.textContent !== "") return;
-            gameController.playRound(parseInt(e.target.dataset.index));
-            updateGameboard();
-        });
-    });
 
     restartButton.addEventListener("click", (e) => {
         gameBoard.reset();
@@ -78,6 +76,23 @@ const displayController = (() => {
         closeModalForm();
         gameController.createPlayers();
     });
+
+    const gameFlow = () => {
+        if (gameController.getCurrentPlayer().getType() == "Person"){
+            fieldElements.forEach((field) => {
+                field.addEventListener("click", (e) => {
+                    if (gameController.getIsOver() || e.target.textContent !== "") return;
+                    gameController.playRound(parseInt(e.target.dataset.index));
+                    updateGameboard();
+                });
+            });          
+        }
+
+        else {
+            gameController.playRound();
+            updateGameboard();
+        }
+    }
 
     const updateGameboard = () => {
         for (let i = 0; i < fieldElements.length; i++) {
@@ -108,15 +123,20 @@ const displayController = (() => {
 
     return {
         setResultMessage,
-        setMessageElement
+        setMessageElement,
+        gameFlow
     }
 })();
 
 const gameController = (() => {
     let playerX;
     let playerO;
+    let currentPlayer;
+    // let players = [playerX, playerO];
+    let AIfieldindex;
     let round = 1;
     let isOver = false;
+
     const selectForms = document.querySelectorAll(".select");
 
     const createPlayers = () => {
@@ -126,7 +146,15 @@ const gameController = (() => {
     }
 
     const playRound = (fieldIndex) => {
-        gameBoard.setField(fieldIndex, getCurrentPlayerSign());
+        currentPlayer = round % 2 === 1 ? playerX.getType() : playerO.getType();
+        
+        if (currentPlayer === "Person") {
+            gameBoard.setField(fieldIndex, getCurrentPlayerSign());
+        }
+
+        else {
+            gameBoard.setField(AIplay(), getCurrentPlayerSign());
+        }
 
         if (checkWinner(fieldIndex)) {
             displayController.setResultMessage(getCurrentPlayerSign());
@@ -140,14 +168,28 @@ const gameController = (() => {
             return;
         }
 
-        round++;
+        round++
         displayController.setMessageElement(
             `Player ${getCurrentPlayerSign()}'s turn`
         );
-    } 
+    }
+
+    const AIplay = () => {
+        while (true) {
+            AIfieldindex = Math.floor(Math.random()* 9);
+            if (gameBoard.getField(AIfieldindex) == "") {
+                break;
+            }
+        }
+        return AIfieldindex;
+    }
 
     const getCurrentPlayerSign = () => {
         return round % 2 === 1 ? playerX.getSign() : playerO.getSign();
+    }
+
+    const getCurrentPlayer = () => {
+        return round % 2 === 1 ? playerX : playerO;
     }
 
     const checkWinner = (fieldIndex) => {
@@ -181,6 +223,12 @@ const gameController = (() => {
     };
 
     return {
-        getIsOver, playRound, reset, createPlayers
+        getIsOver, playRound, reset, createPlayers, AIplay, getCurrentPlayer
     }
 })();
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById("modalForm")) {
+        document.getElementById("modalForm").style.display = "none";
+    }
+}

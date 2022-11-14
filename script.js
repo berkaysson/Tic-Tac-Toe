@@ -35,7 +35,6 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-    
     const messageElement = document.getElementById("message-box");
     const restartButton = document.getElementById("restart-btn");
     const settingsButton = document.getElementById("settings-btn");
@@ -43,10 +42,13 @@ const displayController = (() => {
     const startButton = document.getElementById("start-btn");
     const selectForms = document.querySelectorAll(".select");
     const fieldElements = document.querySelectorAll(".field");
-    let count = 0;
+
+    let isCreated = false;
+    
     selectForms.forEach((select) => {
         select.addEventListener("change", () => {
             gameController.createPlayers();
+            isCreated = true;
         });
     });
 
@@ -64,7 +66,12 @@ const displayController = (() => {
         gameController.reset();
         updateGameboard();
         setMessageElement("Player X's turn", "turn");
-        openModalForm();
+        isCreated = true;
+        // openModalForm();
+        if (selectForms[0].value != "Person"){
+            gameController.gameFlow();
+            updateGameboard()
+        } 
     });
     
     startButton.addEventListener("click", () => {
@@ -72,20 +79,28 @@ const displayController = (() => {
         gameController.reset();
         updateGameboard();
         setMessageElement("Player X's turn", "turn");
-        closeModalForm();
         gameController.createPlayers();
+        isCreated = true;
+        closeModalForm();
+        if (selectForms[0].value != "Person"){
+            gameController.gameFlow();
+            updateGameboard()
+        } 
     });
 
     settingsButton.addEventListener("click", () => {
         openModalForm();
     });
 
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("modalForm")) {
+            closeModalForm();
+        }
+    }
+
     closeButton.addEventListener("click", () => {
         closeModalForm();
-        gameController.createPlayers();
     });
-
-    // write code takes fieldindex by step and every step checks player is AI or person
 
     const updateGameboard = () => {
         for (let i = 0; i < fieldElements.length; i++) {
@@ -117,7 +132,9 @@ const displayController = (() => {
     }
 
     const closeModalForm = () => {
-        document.getElementById("modalForm").style.display = "none";
+        if (isCreated) {
+            document.getElementById("modalForm").style.display = "none";
+        }
     }
 
     return {
@@ -131,7 +148,6 @@ const gameController = (() => {
     let playerO;
     let currentPlayer;
     let nextPlayer;
-    // let players = [playerX, playerO];
     let AIfieldindex;
     let round = 1;
     let isNotOver = true;
@@ -141,25 +157,33 @@ const gameController = (() => {
     const createPlayers = () => {
         playerX = Player("X", selectForms[0].value);
         playerO = Player("O", selectForms[1].value);
+        document.getElementById("close-btn").classList.remove('unactive-btn');
         return playerX, playerO;
     }
-
-    // if (round === 1 && playerX.getType() != "Person") {
-    //     AIPlay();
-    // }
 
     const gameFlow = (fieldIndex) => {
         currentPlayer = round % 2 === 1 ? playerX.getType() : playerO.getType();
         nextPlayer = round % 2 === 1 ? playerO.getType() : playerX.getType();
+
+        if(round === 1 && currentPlayer != "Person"){
+            AIPlay();
+            return
+        }
         if(currentPlayer == "Person") {
             personPlay(fieldIndex);
-            if(!getIsOver) return;
-            if (round === 9) {
-                displayController.setResultMessage("Draw");
-                isNotOver = false;
-                return;
+
+            if(round === 9 && playerX.getType() != "Person"){
+                AIPlay();
             }
+
             if(nextPlayer != "Person") {
+                if(!getIsOver) return;
+                if (round === 9) {
+                    displayController.setResultMessage("Draw");
+                    isNotOver = false;
+                    console.log("11")
+                    return;
+                }
                 AIPlay();
             }
         }
@@ -168,11 +192,11 @@ const gameController = (() => {
     const personPlay = (fieldIndex) => {
         gameBoard.setField(fieldIndex, getCurrentPlayerSign());
         
-        if (checkWinner(fieldIndex)) {
-            displayController.setResultMessage(getCurrentPlayerSign());
-            isNotOver = false;
-            return;
-        }
+        // if (checkWinner(fieldIndex)) {
+        //     displayController.setResultMessage(getCurrentPlayerSign());
+        //     isNotOver = false;
+        //     return;
+        // }
 
         if (round === 9) {
             displayController.setResultMessage("Draw");
@@ -194,12 +218,15 @@ const gameController = (() => {
                 break;
             }
         }
+
         gameBoard.setField(AIfieldindex, getCurrentPlayerSign());
-        if (checkWinner(AIfieldindex)) {
-            displayController.setResultMessage(getCurrentPlayerSign());
-            isNotOver = false;
-            return;
-        }
+
+        // if (checkWinner(AIfieldindex)) {
+        //     displayController.setResultMessage(getCurrentPlayerSign());
+        //     isNotOver = false;
+        //     return;
+        // }
+        
         if (round === 9) {
             displayController.setResultMessage("Draw");
             isNotOver = false;
@@ -211,10 +238,6 @@ const gameController = (() => {
     const getCurrentPlayerSign = () => {
         return round % 2 === 1 ? playerX.getSign() : playerO.getSign();
     }
-
-    // const getCurrentPlayer = () => {
-    //     return round % 2 === 1 ? playerX : playerO;
-    // }
 
     const checkWinner = (fieldIndex) => {
         const winConditions = [
@@ -250,9 +273,3 @@ const gameController = (() => {
         getIsOver, reset, createPlayers, AIPlay, personPlay, gameFlow
     }
 })();
-
-window.onclick = function(event) {
-    if (event.target == document.getElementById("modalForm")) {
-        document.getElementById("modalForm").style.display = "none";
-    }
-}

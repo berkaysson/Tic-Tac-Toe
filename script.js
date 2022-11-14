@@ -81,7 +81,7 @@ const displayController = (() => {
         gameController.createPlayers();
         isCreated = true;
         closeModalForm();
-        if (selectForms[0].value != "Person") {
+        if (selectForms[0].value != "Person" && isCreated) {
             gameController.gameFlow();
             updateGameboard()
         }
@@ -131,14 +131,30 @@ const displayController = (() => {
     }
 
     const closeModalForm = () => {
+        checkPerson();
         if (isCreated) {
             document.getElementById("modalForm").style.display = "none";
+        }
+    }
+
+    const checkPerson = () => {
+        if ((selectForms[0].value != "Person" && selectForms[1].value != "Person")) {
+            document.getElementById("notification-panel").style.display = "block";
+            document.getElementById("close-btn").classList.add('unactive-btn');
+            document.getElementById("start-btn").classList.add('unactive-btn');
+            return isCreated = false;
+        }
+        else {
+            document.getElementById("notification-panel").style.display = "none";
+            document.getElementById("close-btn").classList.remove('unactive-btn');
+            document.getElementById("start-btn").classList.remove('unactive-btn');
         }
     }
 
     return {
         setResultMessage,
         setMessageElement,
+        checkPerson
     }
 })();
 
@@ -156,7 +172,7 @@ const gameController = (() => {
     const createPlayers = () => {
         playerX = Player("X", selectForms[0].value);
         playerO = Player("O", selectForms[1].value);
-        document.getElementById("close-btn").classList.remove('unactive-btn');
+        displayController.checkPerson();
         return playerX, playerO;
     }
 
@@ -268,6 +284,6 @@ const gameController = (() => {
     };
 
     return {
-        getIsOver, reset, createPlayers, AIPlay, personPlay, gameFlow
+        getIsOver, reset, createPlayers, gameFlow
     }
 })();

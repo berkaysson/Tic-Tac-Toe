@@ -10,8 +10,6 @@ const Player = (sign, player_type) => {
     return {sign, player_type, getSign, getType};
 };
 
-displayController.gameFlow();
-
 const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
 
@@ -37,25 +35,35 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-    const fieldElements = document.querySelectorAll(".field");
+    
     const messageElement = document.getElementById("message-box");
     const restartButton = document.getElementById("restart-btn");
     const settingsButton = document.getElementById("settings-btn");
     const closeButton = document.getElementById("close-btn");
     const startButton = document.getElementById("start-btn");
     const selectForms = document.querySelectorAll(".select");
-
+    const fieldElements = document.querySelectorAll(".field");
+    let count = 0;
     selectForms.forEach((select) => {
         select.addEventListener("change", () => {
             gameController.createPlayers();
         });
     });
 
+    fieldElements.forEach((field) => {
+        field.addEventListener("click", (e) => {
+            if (!gameController.getIsOver() || e.target.textContent !== "") return;
+            gameController.gameFlow(parseInt(e.target.dataset.index));
+            updateGameboard();
+        });
+    });
+
+
     restartButton.addEventListener("click", (e) => {
         gameBoard.reset();
         gameController.reset();
         updateGameboard();
-        setMessageElement("Player X's turn");
+        setMessageElement("Player X's turn", "turn");
         openModalForm();
     });
     
@@ -63,7 +71,7 @@ const displayController = (() => {
         gameBoard.reset();
         gameController.reset();
         updateGameboard();
-        setMessageElement("Player X's turn");
+        setMessageElement("Player X's turn", "turn");
         closeModalForm();
         gameController.createPlayers();
     });
@@ -77,22 +85,7 @@ const displayController = (() => {
         gameController.createPlayers();
     });
 
-    const gameFlow = () => {
-        if (gameController.getCurrentPlayer().getType() == "Person"){
-            fieldElements.forEach((field) => {
-                field.addEventListener("click", (e) => {
-                    if (gameController.getIsOver() || e.target.textContent !== "") return;
-                    gameController.playRound(parseInt(e.target.dataset.index));
-                    updateGameboard();
-                });
-            });          
-        }
-
-        else {
-            gameController.playRound();
-            updateGameboard();
-        }
-    }
+    // write code takes fieldindex by step and every step checks player is AI or person
 
     const updateGameboard = () => {
         for (let i = 0; i < fieldElements.length; i++) {
@@ -102,15 +95,21 @@ const displayController = (() => {
 
     const setResultMessage = (winner) => {
         if (winner === "Draw") {
-            setMessageElement("It's a draw!");
+            setMessageElement("It's a draw!", "result");
         } 
         else {
-            setMessageElement(`Player ${winner} has won!`);
+            setMessageElement(`Player ${winner} has won!`, "result");
         }
     }
     
-    const setMessageElement = (message) => {
-        messageElement.textContent = message; 
+    const setMessageElement = (message, type) => {
+        if (type == "turn" && (selectForms[0].value != "Person" || selectForms[1].value != "Person")){
+            messageElement.textContent = ""; 
+        }
+        else {
+            messageElement.textContent = message;
+        }
+            
     }
 
     const openModalForm = () => {
@@ -124,7 +123,6 @@ const displayController = (() => {
     return {
         setResultMessage,
         setMessageElement,
-        gameFlow
     }
 })();
 
@@ -132,10 +130,11 @@ const gameController = (() => {
     let playerX;
     let playerO;
     let currentPlayer;
+    let nextPlayer;
     // let players = [playerX, playerO];
     let AIfieldindex;
     let round = 1;
-    let isOver = false;
+    let isNotOver = true;
 
     const selectForms = document.querySelectorAll(".select");
 
@@ -145,52 +144,77 @@ const gameController = (() => {
         return playerX, playerO;
     }
 
-    const playRound = (fieldIndex) => {
+    // if (round === 1 && playerX.getType() != "Person") {
+    //     AIPlay();
+    // }
+
+    const gameFlow = (fieldIndex) => {
         currentPlayer = round % 2 === 1 ? playerX.getType() : playerO.getType();
+        nextPlayer = round % 2 === 1 ? playerO.getType() : playerX.getType();
+        if(currentPlayer == "Person") {
+            personPlay(fieldIndex);
+            if(!getIsOver) return;
+            if (round === 9) {
+                displayController.setResultMessage("Draw");
+                isNotOver = false;
+                return;
+            }
+            if(nextPlayer != "Person") {
+                AIPlay();
+            }
+        }
+    }
+
+    const personPlay = (fieldIndex) => {
+        gameBoard.setField(fieldIndex, getCurrentPlayerSign());
         
-        if (currentPlayer === "Person") {
-            gameBoard.setField(fieldIndex, getCurrentPlayerSign());
-        }
-
-        else {
-            gameBoard.setField(AIplay(), getCurrentPlayerSign());
-        }
-
         if (checkWinner(fieldIndex)) {
             displayController.setResultMessage(getCurrentPlayerSign());
-            isOver = true;
+            isNotOver = false;
             return;
         }
 
         if (round === 9) {
             displayController.setResultMessage("Draw");
-            isOver = true;
+            isNotOver = false;
             return;
         }
 
         round++
+
         displayController.setMessageElement(
-            `Player ${getCurrentPlayerSign()}'s turn`
+            `Player ${getCurrentPlayerSign()}'s turn`, "turn"
         );
     }
 
-    const AIplay = () => {
+    const AIPlay = () => {
         while (true) {
             AIfieldindex = Math.floor(Math.random()* 9);
             if (gameBoard.getField(AIfieldindex) == "") {
                 break;
             }
         }
-        return AIfieldindex;
+        gameBoard.setField(AIfieldindex, getCurrentPlayerSign());
+        if (checkWinner(AIfieldindex)) {
+            displayController.setResultMessage(getCurrentPlayerSign());
+            isNotOver = false;
+            return;
+        }
+        if (round === 9) {
+            displayController.setResultMessage("Draw");
+            isNotOver = false;
+            return;
+        }
+        round++;
     }
 
     const getCurrentPlayerSign = () => {
         return round % 2 === 1 ? playerX.getSign() : playerO.getSign();
     }
 
-    const getCurrentPlayer = () => {
-        return round % 2 === 1 ? playerX : playerO;
-    }
+    // const getCurrentPlayer = () => {
+    //     return round % 2 === 1 ? playerX : playerO;
+    // }
 
     const checkWinner = (fieldIndex) => {
         const winConditions = [
@@ -214,16 +238,16 @@ const gameController = (() => {
     }
 
     const getIsOver = () => {
-        return isOver;
+        return isNotOver;
     }; 
 
     const reset = () => {
         round = 1;
-        isOver = false;
+        isNotOver = true;
     };
 
     return {
-        getIsOver, playRound, reset, createPlayers, AIplay, getCurrentPlayer
+        getIsOver, reset, createPlayers, AIPlay, personPlay, gameFlow
     }
 })();
 

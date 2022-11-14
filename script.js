@@ -67,13 +67,12 @@ const displayController = (() => {
         updateGameboard();
         setMessageElement("Player X's turn", "turn");
         isCreated = true;
-        // openModalForm();
-        if (selectForms[0].value != "Person"){
+        if (selectForms[0].value != "Person") {
             gameController.gameFlow();
             updateGameboard()
-        } 
+        }
     });
-    
+
     startButton.addEventListener("click", () => {
         gameBoard.reset();
         gameController.reset();
@@ -82,17 +81,17 @@ const displayController = (() => {
         gameController.createPlayers();
         isCreated = true;
         closeModalForm();
-        if (selectForms[0].value != "Person"){
+        if (selectForms[0].value != "Person") {
             gameController.gameFlow();
             updateGameboard()
-        } 
+        }
     });
 
     settingsButton.addEventListener("click", () => {
         openModalForm();
     });
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == document.getElementById("modalForm")) {
             closeModalForm();
         }
@@ -105,26 +104,26 @@ const displayController = (() => {
     const updateGameboard = () => {
         for (let i = 0; i < fieldElements.length; i++) {
             fieldElements[i].textContent = gameBoard.getField(i);
-          }
+        }
     }
 
     const setResultMessage = (winner) => {
         if (winner === "Draw") {
             setMessageElement("It's a draw!", "result");
-        } 
+        }
         else {
             setMessageElement(`Player ${winner} has won!`, "result");
         }
     }
-    
+
     const setMessageElement = (message, type) => {
-        if (type == "turn" && (selectForms[0].value != "Person" || selectForms[1].value != "Person")){
-            messageElement.textContent = ""; 
+        if (type == "turn" && (selectForms[0].value != "Person" || selectForms[1].value != "Person")) {
+            messageElement.textContent = "";
         }
         else {
             messageElement.textContent = message;
         }
-            
+
     }
 
     const openModalForm = () => {
@@ -165,23 +164,22 @@ const gameController = (() => {
         currentPlayer = round % 2 === 1 ? playerX.getType() : playerO.getType();
         nextPlayer = round % 2 === 1 ? playerO.getType() : playerX.getType();
 
-        if(round === 1 && currentPlayer != "Person"){
+        if (round === 1 && currentPlayer != "Person") {
             AIPlay();
             return
         }
-        if(currentPlayer == "Person") {
+        if (currentPlayer == "Person") {
             personPlay(fieldIndex);
 
-            if(round === 9 && playerX.getType() != "Person"){
+            if (round === 9 && playerX.getType() != "Person") {
                 AIPlay();
             }
 
-            if(nextPlayer != "Person") {
-                if(!getIsOver) return;
+            if (nextPlayer != "Person") {
+                if (!getIsOver) return;
                 if (round === 9) {
                     displayController.setResultMessage("Draw");
                     isNotOver = false;
-                    console.log("11")
                     return;
                 }
                 AIPlay();
@@ -191,12 +189,12 @@ const gameController = (() => {
 
     const personPlay = (fieldIndex) => {
         gameBoard.setField(fieldIndex, getCurrentPlayerSign());
-        
-        // if (checkWinner(fieldIndex)) {
-        //     displayController.setResultMessage(getCurrentPlayerSign());
-        //     isNotOver = false;
-        //     return;
-        // }
+
+        if (checkWinner(fieldIndex)) {
+            displayController.setResultMessage(getCurrentPlayerSign());
+            isNotOver = false;
+            return;
+        }
 
         if (round === 9) {
             displayController.setResultMessage("Draw");
@@ -213,7 +211,7 @@ const gameController = (() => {
 
     const AIPlay = () => {
         while (true) {
-            AIfieldindex = Math.floor(Math.random()* 9);
+            AIfieldindex = Math.floor(Math.random() * 9);
             if (gameBoard.getField(AIfieldindex) == "") {
                 break;
             }
@@ -221,12 +219,12 @@ const gameController = (() => {
 
         gameBoard.setField(AIfieldindex, getCurrentPlayerSign());
 
-        // if (checkWinner(AIfieldindex)) {
-        //     displayController.setResultMessage(getCurrentPlayerSign());
-        //     isNotOver = false;
-        //     return;
-        // }
-        
+        if (checkWinner(AIfieldindex)) {
+            displayController.setResultMessage(getCurrentPlayerSign());
+            isNotOver = false;
+            return;
+        }
+
         if (round === 9) {
             displayController.setResultMessage("Draw");
             isNotOver = false;
@@ -252,17 +250,17 @@ const gameController = (() => {
         ];
 
         return winConditions
-        .filter((combination) => combination.includes(fieldIndex))
-        .some((possibleCombination) =>
-          possibleCombination.every(
-            (index) => gameBoard.getField(index) === getCurrentPlayerSign()
-          )
-        );
+            .filter((combination) => combination.includes(fieldIndex))
+            .some((possibleCombination) =>
+                possibleCombination.every(
+                    (index) => gameBoard.getField(index) === getCurrentPlayerSign()
+                )
+            );
     }
 
     const getIsOver = () => {
         return isNotOver;
-    }; 
+    };
 
     const reset = () => {
         round = 1;

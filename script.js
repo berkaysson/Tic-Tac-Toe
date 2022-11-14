@@ -7,7 +7,7 @@ const Player = (sign, player_type) => {
         return player_type;
     }
 
-    return {sign, player_type, getSign, getType};
+    return { sign, player_type, getSign, getType };
 };
 
 const gameBoard = (() => {
@@ -44,7 +44,7 @@ const displayController = (() => {
     const fieldElements = document.querySelectorAll(".field");
 
     let isCreated = false;
-    
+
     selectForms.forEach((select) => {
         select.addEventListener("change", () => {
             gameController.createPlayers();

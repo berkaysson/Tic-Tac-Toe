@@ -209,6 +209,13 @@ main {
     border-color: var(--danger-color);
 }
 
+.unactive-btn {
+    cursor:not-allowed;
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+
 /* RESPONSIVE */
 
 @media (max-width: 660px) {

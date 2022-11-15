@@ -98,6 +98,8 @@ const displayController = (() => {
     }
 
     closeButton.addEventListener("click", () => {
+        gameController.createPlayers();
+        isCreated = true;
         closeModalForm();
     });
 

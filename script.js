@@ -7,7 +7,7 @@ const Player = (sign, player_type) => {
         return player_type;
     }
 
-    return { sign, player_type, getSign, getType };
+    return {getSign, getType};
 };
 
 const gameBoard = (() => {
@@ -192,7 +192,7 @@ const gameController = (() => {
             }
 
             if (nextPlayer != "Person") {
-                if (!getIsOver) return;
+                if (!getIsOver()) return;
                 if (round === 9) {
                     displayController.setResultMessage("Draw");
                     isNotOver = false;

@@ -19,6 +19,8 @@
     --font-xlg: 4rem;
     --font-sl: 0.8rem;
     --font-md: 1.1rem;
+
+    --transition-size:width 0.2s ease-in;
 }
 
 /* Main Styles */
@@ -106,6 +108,7 @@ main {
     width: 600px;
     height: 600px;
     gap: var(--gap);
+    transition: var(--transition-size);
 }
 
 .field {
@@ -117,6 +120,7 @@ main {
     text-align: center;
     cursor: pointer;
     user-select: none;
+    transition: var(--transition-size);
 }
 
 .field:hover {
@@ -158,6 +162,7 @@ main {
     border-radius: var(--border-radius);    
     background-color: var(--background-color);
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 2px 1px, rgba(0, 0, 0, 0.3) 0px 1px 3px 1px;
+    transition: var(--transition-size);
 }
 
 #settings>.btn-wrapper {

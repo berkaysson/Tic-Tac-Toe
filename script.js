@@ -42,6 +42,7 @@ const displayController = (() => {
     const startButton = document.getElementById("start-btn");
     const selectForms = document.querySelectorAll(".select");
     const fieldElements = document.querySelectorAll(".field");
+    const fieldsignElements = document.querySelectorAll(".field-sign");
 
     let isCreated = false;
 
@@ -105,8 +106,32 @@ const displayController = (() => {
 
     const updateGameboard = () => {
         for (let i = 0; i < fieldElements.length; i++) {
-            fieldElements[i].textContent = gameBoard.getField(i);
+            fieldsignElements[i].textContent = gameBoard.getField(i);
         }
+    }
+
+    const animateSign = (index, type) => {
+        if (type != "Person") {
+            fieldsignElements[index].animate([
+                { transform: 'scale(0)' },
+                { transform: 'scale(0)' },
+                { transform: 'scale(0)' },
+                { transform: 'scale(0.8)' },
+                { transform: 'scale(1.3)'},
+                { transform: 'scale(1)'}
+            ], {
+                duration:300 + Math.random()*250,
+            })
+            return
+        }
+        fieldsignElements[index].animate([
+            { transform: 'scale(0)' },
+            { transform: 'scale(0.8)' },
+            { transform: 'scale(1.3)'},
+            { transform: 'scale(1)'}
+        ], {
+            duration:250,
+        })
     }
 
     const setResultMessage = (winner) => {
@@ -156,7 +181,8 @@ const displayController = (() => {
     return {
         setResultMessage,
         setMessageElement,
-        checkPerson
+        checkPerson,
+        animateSign
     }
 })();
 
@@ -225,6 +251,8 @@ const gameController = (() => {
         displayController.setMessageElement(
             `Player ${getCurrentPlayerSign()}'s turn`, "turn"
         );
+
+        displayController.animateSign(fieldIndex, "Person");
     }
 
     const AIPlay = () => {
@@ -249,6 +277,7 @@ const gameController = (() => {
             return;
         }
         round++;
+        displayController.animateSign(AIfieldindex, "AI");
     }
 
     const getCurrentPlayerSign = () => {

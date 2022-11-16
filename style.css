@@ -21,11 +21,6 @@
     --font-md: 1.1rem;
 }
 
-@keyframes example {
-    from {font-size: 10rem;}
-    to {font-size: inherit;}
-}
-
 /* Main Styles */
 
 *,
@@ -123,16 +118,6 @@ main {
     cursor: pointer;
     user-select: none;
 }
-
- 
-.field-sign:active {
-    animation-name: example;
-    animation-duration:2s;
-}
-
-.field:active .field-sign{
-    font-size: 10rem;
-} */
 
 .field:hover {
     border-color:var(--dark-color);

@@ -65,7 +65,7 @@ const displayController = (() => {
     restartButton.addEventListener("click", (e) => {
         gameBoard.reset();
         gameController.reset();
-        updateGameboard();
+        setTimeout(updateGameboard, 200);
         setMessageElement("Player X's turn", "turn");
         isCreated = true;
         if (selectForms[0].value != "Person") {
@@ -111,27 +111,43 @@ const displayController = (() => {
     }
 
     const animateSign = (index, type) => {
-        if (type != "Person") {
+        if (type == "AI") {
             fieldsignElements[index].animate([
                 { transform: 'scale(0)' },
                 { transform: 'scale(0)' },
                 { transform: 'scale(0)' },
                 { transform: 'scale(0.8)' },
-                { transform: 'scale(1.3)'},
+                { transform: 'scale(1.4)'},
                 { transform: 'scale(1)'}
             ], {
                 duration:300 + Math.random()*250,
             })
             return
         }
-        fieldsignElements[index].animate([
-            { transform: 'scale(0)' },
-            { transform: 'scale(0.8)' },
-            { transform: 'scale(1.3)'},
-            { transform: 'scale(1)'}
-        ], {
-            duration:250,
-        })
+        else if (type == "Person") {
+            fieldsignElements[index].animate([
+                { transform: 'scale(0)' },
+                { transform: 'scale(0.8)' },
+                { transform: 'scale(1.4)'},
+                { transform: 'scale(1)'}
+            ], {
+                duration:250,
+            })
+            return
+        }
+
+        else if (type == "reset") {
+            fieldsignElements.forEach((element) => {
+                element.animate([
+                    { transform: 'scale(0.9)'},
+                    { transform: 'scale(0.7)'},
+                    { transform: 'scale(0.4)'},
+                    { transform: 'scale(0)'}
+                ], {
+                    duration:250,
+                })
+            })
+        }
     }
 
     const setResultMessage = (winner) => {
@@ -312,6 +328,7 @@ const gameController = (() => {
     const reset = () => {
         round = 1;
         isNotOver = true;
+        displayController.animateSign(0, "reset");
     };
 
     return {
